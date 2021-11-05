@@ -2,7 +2,7 @@
 
 _G.ECB_Globals = {
 	Version = "0.1.0",
-	BuildYear = "2021"
+	BuildYear = "2021",
 }
 
 if not _G.ECB_Settings then _G.ECB_Settings = {} end
@@ -109,16 +109,18 @@ function toHex(color)
 	return "#"..string.reverse(final)
 end
 
+--[[ Console Library ]]--
+
 local Console = {}
 
 Console.Out = function(t, colour)
 	t = t or ""
 	colour = colour or "default"
 	if type(colour) == "string" then colour = GetTextColour(colour) end
-	
+
 	t = ("<font color=\"%s\">%s</font>"):format(toHex(colour), t)
 	Output.Out.Text = Output.Out.Text..t.."\n"
-	
+
 	Output.CanvasPosition = Vector2.new(0, 999)
 end
 
@@ -129,6 +131,38 @@ end
 Output.Out:GetPropertyChangedSignal("Text"):Connect(function()
 	Output.Out.Size = UDim2.new(1, 0, 0, Output.Out.TextBounds.Y)
 end)
+
+--[[ Utilities Library ]]--
+
+local Utilities = {}
+
+Utilities.GetPlayerMatches = function(Player)
+	local Matches = {}
+	for _, Player in pairs(Players:GetPlayers()) do
+		if Player.Name:sub(1, #Player) == Player then
+			table.insert(Matches, Player)
+		end
+	end
+	return Matches
+end
+
+Utilities.GetPlayer = function(Player, AllowMultiple)
+	if Player:lower() == "me" then
+		return LocalPlayer
+	elseif Player:lower() == "all" and AllowMultiple then
+		return Players:GetPlayers()
+	elseif Player:lower() == "others" then
+		local PlayersList = Players:GetPlayers()
+		table.remove(PlayersList, table.find(PlayersList, LocalPlayer))
+		return PlayersList
+	else
+		for _, Player in pairs(Players:GetPlayers()) do
+			if Player.Name:lower():sub(1, #Player) == Player:lower() then
+				return Player
+			end
+		end
+	end
+end
 
 --[[ Commands ]]--
 
@@ -220,10 +254,10 @@ Output.Parent.Draggable = true
 CommandBar.InputBox:GetPropertyChangedSignal("Text"):Connect(function()
 	CommandBar.InputBox.Text = CommandBar.InputBox.Text:gsub("\t", "")
 	local FormattedText = CommandBar.InputBox.Text
-	
+
 	FormattedText = FormattedText:gsub("<", "&lt;")
 	FormattedText = FormattedText:gsub(">", "&gt;")
-	
+
 	for Command, _ in pairs(Commands) do
 		local CommandMatch = ("^%s"):format(Command)
 		FormattedText = FormattedText:gsub(CommandMatch, "<b>%1</b>")
@@ -274,7 +308,7 @@ CommandBar.InputBox.FocusLost:Connect(function(EnterPressed, InputCausingFocusLo
 		local RawCommand = CommandBar.InputBox.Text
 		CommandBar.InputBox.Text = ""
 		CommandBar.InputDisplay.Indicator.Visible = false
-		
+
 		if RawCommand ~= "" then
 			Console.Out("&gt; "..RawCommand)
 			local Success, Response = pcall(RunCommand, ParseCommand(RawCommand))
@@ -284,7 +318,7 @@ CommandBar.InputBox.FocusLost:Connect(function(EnterPressed, InputCausingFocusLo
 			Console.Out()
 		end
 	end
-	
+
 	SetGuiOpen(false)
 end)
 
@@ -297,10 +331,10 @@ local function IntellisenseFrame()
 	if CommandBar.InputBox.Text == "" then Intellisense.Visible = false return end
 
 	local CommandName, _ = ParseCommand(CommandBar.InputBox.Text)
-
+	
 	local Matches = {}
 	for Cmd, Data in pairs(Commands) do
-		if Cmd:sub(1, #CommandName) == CommandName then
+		if Cmd:lower():sub(1, #CommandName) == CommandName:lower() then
 			table.insert(Matches, {Name = Cmd, Text = Data.Usage or Cmd})
 		end
 	end
@@ -336,7 +370,7 @@ CommandBar.InputBox:GetPropertyChangedSignal("Text"):Connect(IntellisenseFrame)
 UserInputService.InputEnded:Connect(function(InputObject, GameProcessed)
 	if InputObject.KeyCode == Enum.KeyCode.Tab then
 		if IntellisenseCommand ~= "" then
-			CommandBar.InputBox.Text = IntellisenseCommand
+			CommandBar.InputBox.Text = IntellisenseCommand.." "
 			CommandBar.InputBox.CursorPosition = 999
 		end
 	elseif InputObject.KeyCode == Enum.KeyCode.Up then
@@ -366,7 +400,13 @@ end, false, _G.ECB_Settings.Output_Keybind)
 --[[ Export ]]--
 
 SetGuiOpen(false)
-Console.Out(("\nExtended Command Bar Library [%s]\n(C) plainenglish %s"):format(_G.ECB_Globals.Version, _G.ECB_Globals.BuildYear))
+if not _G.ECB_Settings.AppData then
+	Console.Out(("\nExtended Command Bar Library [%s]\n(C) plainenglish %s"):format(_G.ECB_Globals.Version, _G.ECB_Globals.BuildYear))
+else
+	Console.Out(("\n%s [%s]\n(C) %s %s"):format(_G.ECB_Settings.AppData.Name, _G.ECB_Settings.AppData.Version, _G.ECB_Settings.AppData.Author, _G.ECB_Settings.AppData.BuildYear))
+	Console.Out(("\nPowered by Extended Command Bar Library [%s] (C) plainenglish %s"):format(_G.ECB_Globals.Version, _G.ECB_Globals.BuildYear))
+end
+
 if _G.ECB_Settings.Debug then Console.Out("DEBUG MODE ENABLED", "warn") end
 Console.Out(("Press %s to toggle the console. Press %s to open the command bar."):format(tostring(_G.ECB_Settings.Output_Keybind), tostring(_G.ECB_Settings.Open_Keybind)), "info")
 
@@ -377,8 +417,9 @@ return {
 		end
 	end,
 	SetTheme = function()
-		
+
 	end,
 	Console = Console,
+	Utilities = Utilities,
 	GetTextColour = GetTextColour
 }
