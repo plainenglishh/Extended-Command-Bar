@@ -8,6 +8,8 @@ To load the ECB Module, create a variable referencing the loadstring.
 local ECB = loadstring(game:HttpGet("https://raw.githubusercontent.com/plainenglishh/Extended-Command-Bar/main/library.lua", true))()
 ```
 
+If for whatever reason the above code works, go to https://raw.githubusercontent.com/plainenglishh/Extended-Command-Bar/main/library.lua and copy the code, paste it into pastebin and use the raw link for that as a temporary replacement.
+
 # ECB Library
 The variable referenced above will contain a table with the following functions / globals.
 * RegisterCommands(Commands: table)
