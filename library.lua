@@ -351,7 +351,6 @@ local function IntellisenseFrame()
 			if i == IntellisenseCursor then
 				Text = Text.."<b>&gt; "..DataText.."</b>\n"
 				IntellisenseCommand = Data.Name
-				print(IntellisenseCommand)
 			else
 				Text = Text..DataText.."\n"
 			end
