@@ -121,7 +121,7 @@ Console.Out = function(t, colour)
 	t = ("<font color=\"%s\">%s</font>"):format(toHex(colour), t)
 	Output.Out.Text = Output.Out.Text..t.."\n"
 
-	Output.CanvasPosition = Vector2.new(0, 999)
+	Output.CanvasPosition = Vector2.new(0, 999999999)
 end
 
 Console.Clear = function()
@@ -403,8 +403,8 @@ SetGuiOpen(false)
 if not _G.ECB_Settings.AppData then
 	Console.Out(("\nExtended Command Bar Library [%s]\n(C) plainenglish %s"):format(_G.ECB_Globals.Version, _G.ECB_Globals.BuildYear))
 else
-	Console.Out(("\n%s [%s]\n(C) %s %s"):format(_G.ECB_Settings.AppData.Name, _G.ECB_Settings.AppData.Version, _G.ECB_Settings.AppData.Author, _G.ECB_Settings.AppData.BuildYear))
-	Console.Out(("\nPowered by Extended Command Bar Library [%s] (C) plainenglish %s"):format(_G.ECB_Globals.Version, _G.ECB_Globals.BuildYear))
+	Console.Out(("\n%s [%s] (C) %s %s"):format(_G.ECB_Settings.AppData.Name, _G.ECB_Settings.AppData.Version, _G.ECB_Settings.AppData.Author, _G.ECB_Settings.AppData.BuildYear))
+	Console.Out(("Powered by Extended Command Bar [%s] (C) plainenglish %s"):format(_G.ECB_Globals.Version, _G.ECB_Globals.BuildYear))
 end
 
 if _G.ECB_Settings.Debug then Console.Out("DEBUG MODE ENABLED", "warn") end
