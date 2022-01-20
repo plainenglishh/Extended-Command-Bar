@@ -81,32 +81,8 @@ local function SetGuiOpen(Enabled)
 	}):Play()
 end
 
-function toInteger(color)
-	return math.floor(color.r*255)*256^2+math.floor(color.g*255)*256+math.floor(color.b*255)
-end
-
-function toHex(color)
-	local int = toInteger(color)
-
-	local current = int
-	local final = ""
-
-	local hexChar = {
-		"A", "B", "C", "D", "E", "F"
-	}
-
-	repeat local remainder = current % 16
-		local char = tostring(remainder)
-
-		if remainder >= 10 then
-			char = hexChar[1 + remainder - 10]
-		end
-
-		current = math.floor(current/16)
-		final = final..char
-	until current <= 0
-
-	return "#"..string.reverse(final)
+local function toHex(color: Color3): string
+	return string.format("#%02X%02X%02X", color.R * 0xFF, color.G * 0xFF, color.B * 0xFF)
 end
 
 local function Sanitise(String)
