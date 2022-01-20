@@ -41,7 +41,7 @@ local function GetTextColour(Type)
 	elseif Type == "warn" then
 		return  Color3.fromRGB(193, 156, 0)
 	elseif Type == "info" then
-		return  Color3.fromRGB(58, 150, 221)
+		return  Color3.fromRGB(59, 120, 255)
 	elseif Type == "success" then
 		return  Color3.fromRGB(22, 198, 12)
 	end
@@ -85,15 +85,6 @@ local function toHex(color: Color3): string
 	return string.format("#%02X%02X%02X", color.R * 0xFF, color.G * 0xFF, color.B * 0xFF)
 end
 
-local function Sanitise(String)
-	String = string.gsub(String, "<", "&lt;")
-	String = string.gsub(String, ">", "&gt;")
-	String = string.gsub(String, "\"", "&quot;")
-	String = string.gsub(String, "'", "&apos;")
-	String = string.gsub(String, "&", "&amp;")
-	return String
-end
-
 
 --[[ Console Library ]]--
 
@@ -104,7 +95,7 @@ Console.Out = function(t, colour)
 	colour = colour or "default"
 	if type(colour) == "string" then colour = GetTextColour(colour) end
 
-	t = ("<b><font color=\"%s\">%s</font></b>"):format(toHex(colour), Sanitise(t))
+	t = ("<b><font color=\"%s\">%s</font></b>"):format(toHex(colour), t)
 	Output.Out.Text = Output.Out.Text..t.."\n"
 
 	Output.CanvasPosition = Vector2.new(0, 999999999)
