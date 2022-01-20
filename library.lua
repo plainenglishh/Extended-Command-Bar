@@ -109,6 +109,16 @@ function toHex(color)
 	return "#"..string.reverse(final)
 end
 
+local function Sanitise(String)
+	String = string.gsub(String, "<", "&lt;")
+	String = string.gsub(String, ">", "&gt;")
+	String = string.gsub(String, "\"", "&quot;")
+	String = string.gsub(String, "'", "&apos;")
+	String = string.gsub(String, "&", "&amp;")
+	return String
+end
+
+
 --[[ Console Library ]]--
 
 local Console = {}
@@ -118,7 +128,7 @@ Console.Out = function(t, colour)
 	colour = colour or "default"
 	if type(colour) == "string" then colour = GetTextColour(colour) end
 
-	t = ("<b><font color=\"%s\">%s</font></b>"):format(toHex(colour), t)
+	t = ("<b><font color=\"%s\">%s</font></b>"):format(toHex(colour), Sanitise(t))
 	Output.Out.Text = Output.Out.Text..t.."\n"
 
 	Output.CanvasPosition = Vector2.new(0, 999999999)
