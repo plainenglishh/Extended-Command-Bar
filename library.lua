@@ -35,15 +35,15 @@ local OriginalFieldOfView = Workspace.CurrentCamera.FieldOfView
 
 local function GetTextColour(Type)
 	if Type == "default" then
-		return Color3.new(1, 1, 1)
+		return Color3.fromRGB(204, 204, 204)
 	elseif Type == "err" then
-		return  Color3.new(1, 0.203922, 0.203922)
+		return  Color3.fromRGB(197, 15, 31)
 	elseif Type == "warn" then
-		return  Color3.new(1, 0.572549, 0.219608)
+		return  Color3.fromRGB(193, 156, 0)
 	elseif Type == "info" then
-		return  Color3.new(0.270588, 0.380392, 1)
+		return  Color3.fromRGB(0, 55, 218)
 	elseif Type == "success" then
-		return  Color3.new(0.278431, 0.713725, 0.227451)
+		return  Color3.fromRGB(19, 161, 14)
 	end
 end
 
@@ -118,7 +118,7 @@ Console.Out = function(t, colour)
 	colour = colour or "default"
 	if type(colour) == "string" then colour = GetTextColour(colour) end
 
-	t = ("<font color=\"%s\">%s</font>"):format(toHex(colour), t)
+	t = ("<b><font color=\"%s\">%s</font></b>"):format(toHex(colour), t)
 	Output.Out.Text = Output.Out.Text..t.."\n"
 
 	Output.CanvasPosition = Vector2.new(0, 999999999)
