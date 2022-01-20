@@ -128,7 +128,7 @@ Console.Out = function(t, colour)
 	colour = colour or "default"
 	if type(colour) == "string" then colour = GetTextColour(colour) end
 
-	t = ("<b><font color=\"%s\">%s</font></b>"):format(toHex(colour), Sanitise(t))
+	t = ("<font color=\"%s\">%s</font>"):format(toHex(colour), Sanitise(t))
 	Output.Out.Text = Output.Out.Text..t.."\n"
 
 	Output.CanvasPosition = Vector2.new(0, 999999999)
